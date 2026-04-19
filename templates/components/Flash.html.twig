@@ -1,0 +1,9 @@
+{# @var type 'success'|'error'|'notice' #}
+{# @var message string|null #}
+{% props type = 'notice', message = null %}
+<div {{ attributes.defaults({
+    class: 'flash flash-' ~ type,
+    role: type == 'error' ? 'alert' : 'status',
+}) }}>
+    {% if message is not null %}{{ message }}{% else %}{% block content %}{% endblock %}{% endif %}
+</div>

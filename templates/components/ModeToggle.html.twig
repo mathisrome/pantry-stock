@@ -1,0 +1,21 @@
+{# Segmented control bound to a LiveComponent action.
+
+    @var options    array<string, string>  Map of value => label.
+    @var current    string|null            Currently-selected value.
+    @var action     string                 LiveAction method name to call on click.
+    @var paramName  string                 Live arg name (defaults to 'mode').
+    @var ariaLabel  string|null            Accessible label for the group.
+#}
+{% props options, current = null, action, paramName = 'mode', ariaLabel = null %}
+<div {{ attributes.defaults({
+    class: 'mode-toggle',
+    role: 'group',
+}) }}{% if ariaLabel %} aria-label="{{ ariaLabel }}"{% endif %}>
+    {% for value, label in options %}
+        <button type="button"
+                class="btn{% if value == current %} active{% endif %}"
+                data-action="live#action"
+                data-live-action-param="{{ action }}"
+                data-live-{{ paramName }}-param="{{ value }}">{{ label }}</button>
+    {% endfor %}
+</div>

@@ -1,0 +1,79 @@
+{# `this` only resolves to the PantryList LiveComponent in this template's
+   own scope. Inside slots of nested components (Card, etc.) `this` is the
+   nested component itself, so we capture the live state into local vars first. #}
+{% set mode = this.mode %}
+{% set notice = this.notice %}
+{% set noticeType = this.noticeType %}
+{% set search = this.search %}
+{% set items = this.items %}
+
+<div {{ attributes.defaults({ 'data-controller': 'barcode-scanner' }) }}>
+
+    <twig:Card title="Scanner" headingId="scanner-heading">
+        <twig:ModeToggle :options="{ ADD: 'Ajouter', REMOVE: 'Retirer' }"
+                         :current="mode"
+                         action="setMode"
+                         paramName="mode"
+                         ariaLabel="Mode du scanner" />
+
+        <div class="scanner-wrapper" data-live-ignore>
+            <video class="scanner" data-barcode-scanner-target="video" autoplay muted playsinline></video>
+            <canvas class="scanner-overlay" data-barcode-scanner-target="overlay"></canvas>
+            <div class="scanner-viewfinder" aria-hidden="true"></div>
+        </div>
+
+        <div class="scanner-actions">
+            <twig:Button variant="primary"
+                         data-barcode-scanner-target="captureBtn"
+                         data-action="barcode-scanner#capture"
+                         disabled>
+                📷 En attente d'un code…
+            </twig:Button>
+            <span class="scanner-status" data-barcode-scanner-target="status" role="status" aria-live="polite"></span>
+        </div>
+
+        <details class="manual-entry" data-live-ignore>
+            <summary>Saisie manuelle</summary>
+            <label for="manual-barcode">Code-barres</label>
+            <div class="manual-row">
+                <input type="text" id="manual-barcode" inputmode="numeric" pattern="\d*"
+                       data-barcode-scanner-target="manual" placeholder="Ex. 3017620422003">
+                <twig:Button data-action="barcode-scanner#submitManual" label="Envoyer" />
+            </div>
+        </details>
+
+        {% if notice %}
+            <twig:Flash :type="noticeType ?? 'notice'"
+                        :message="notice"
+                        style="margin-top: 1rem; margin-bottom: 0;" />
+        {% endif %}
+    </twig:Card>
+
+    <twig:Card :title="'Garde-manger (' ~ items|length ~ ')'" headingId="pantry-heading">
+        <div class="pantry-search">
+            <input type="search"
+                   placeholder="Rechercher par nom, marque ou code-barres…"
+                   data-model="debounce(200)|search"
+                   aria-label="Rechercher dans le garde-manger">
+            {% if search is not empty %}
+                <twig:Button data-action="live#action"
+                             data-live-action-param="clearSearch"
+                             label="Effacer" />
+            {% endif %}
+        </div>
+
+        {% if items is empty %}
+            {% if search is not empty %}
+                <twig:EmptyState :message="'Aucun produit ne correspond à « ' ~ search ~ ' ».'" />
+            {% else %}
+                <twig:EmptyState message="Votre garde-manger est vide — scannez un produit pour commencer." />
+            {% endif %}
+        {% else %}
+            <ul class="pantry-list">
+                {% for item in items %}
+                    <twig:PantryItem :item="item" />
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </twig:Card>
+</div>

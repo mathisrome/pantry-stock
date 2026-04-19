@@ -25,4 +25,16 @@ return [
     '@hotwired/turbo' => [
         'version' => '7.3.0',
     ],
+    '@symfony/ux-live-component' => [
+        'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
+    ],
+    '@zxing/browser' => [
+        'version' => '0.1.5',
+    ],
+    '@zxing/library' => [
+        'version' => '0.21.0',
+    ],
+    'ts-custom-error' => [
+        'version' => '3.3.1',
+    ],
 ];

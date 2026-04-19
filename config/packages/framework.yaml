@@ -8,6 +8,15 @@ framework:
     #esi: true
     #fragments: true
 
+    http_client:
+        scoped_clients:
+            open_food_facts.client:
+                base_uri: 'https://world.openfoodfacts.org'
+                timeout: 3.0
+                headers:
+                    User-Agent: 'PantryStock/1.0 (+https://localhost)'
+                    Accept: 'application/json'
+
 when@test:
     framework:
         test: true

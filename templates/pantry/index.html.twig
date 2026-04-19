@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon garde-manger{% endblock %}
+
+{% block body %}
+    <twig:PageHeader title="Mon garde-manger"
+                     subtitle="Scannez le code-barres d'un produit pour l'ajouter ou le retirer." />
+
+    <twig:PantryList />
+{% endblock %}

@@ -1,0 +1,9 @@
+{# @var title string|null #}
+{# @var headingId string|null #}
+{% props title = null, headingId = null %}
+<section {{ attributes.defaults({class: 'card'}) }}{% if headingId %} aria-labelledby="{{ headingId }}"{% endif %}>
+    {% if title %}
+        <h2{% if headingId %} id="{{ headingId }}"{% endif %}>{{ title }}</h2>
+    {% endif %}
+    {% block content %}{% endblock %}
+</section>

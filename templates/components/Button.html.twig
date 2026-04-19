@@ -1,0 +1,12 @@
+{# @var variant 'default'|'primary' #}
+{# @var active bool #}
+{# @var armed bool #}
+{# @var label string|null #}
+{% props variant = 'default', active = false, armed = false, label = null %}
+{%- set _classes = 'btn' -%}
+{%- if variant == 'primary' %}{% set _classes = _classes ~ ' btn-primary' %}{% endif -%}
+{%- if active %}{% set _classes = _classes ~ ' active' %}{% endif -%}
+{%- if armed %}{% set _classes = _classes ~ ' btn-armed' %}{% endif -%}
+<button {{ attributes.defaults({type: 'button', class: _classes}) }}>
+    {%- if label is not null %}{{ label }}{% else %}{% block content %}{% endblock %}{% endif -%}
+</button>

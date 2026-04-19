@@ -1,0 +1,5 @@
+{# @var message string|null #}
+{% props message = null %}
+<p {{ attributes.defaults({class: 'empty-state'}) }}>
+    {%- if message is not null %}{{ message }}{% else %}{% block content %}{% endblock %}{% endif -%}
+</p>

@@ -1,0 +1,7 @@
+{# @var title string #}
+{# @var subtitle string|null #}
+{% props title, subtitle = null %}
+<header {{ attributes.defaults({class: 'page-header'}) }}>
+    <h1>{{ title }}</h1>
+    {% if subtitle %}<p>{{ subtitle }}</p>{% endif %}
+</header>

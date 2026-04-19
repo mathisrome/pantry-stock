@@ -1,0 +1,36 @@
+{# Renders a single pantry row with quantity controls bound to the parent
+   LiveComponent's `adjust` action.
+
+    @var item App\Entity\PantryItem
+#}
+{% props item %}
+{% set product = item.product %}
+<li {{ attributes }}>
+    {% if product.imageUrl %}
+        <img src="{{ product.imageUrl }}" alt="">
+    {% else %}
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3C/svg%3E" alt="">
+    {% endif %}
+    <div>
+        <strong>{{ product.name }}</strong>
+        {% if product.brand %}<small>{{ product.brand }}</small>{% endif %}
+        {% if product.quantityLabel %}<small>{{ product.quantityLabel }}</small>{% endif %}
+    </div>
+    <div class="qty-controls">
+        <button type="button"
+                class="btn qty-btn"
+                data-action="live#action"
+                data-live-action-param="adjust"
+                data-live-item-id-param="{{ item.id }}"
+                data-live-delta-param="-1"
+                aria-label="Retirer un « {{ product.name }} »">−</button>
+        <span class="qty">× {{ item.quantity }}</span>
+        <button type="button"
+                class="btn qty-btn"
+                data-action="live#action"
+                data-live-action-param="adjust"
+                data-live-item-id-param="{{ item.id }}"
+                data-live-delta-param="1"
+                aria-label="Ajouter un « {{ product.name }} »">+</button>
+    </div>
+</li>
