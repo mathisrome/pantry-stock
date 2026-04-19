@@ -10,32 +10,28 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
-#[ORM\UniqueConstraint(name: 'UNIQ_users_email', columns: ['email'])]
-#[UniqueEntity(fields: ['email'], message: 'Un compte existe déjà avec cet email.')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[ORM\UniqueConstraint(name: 'UNIQ_users_email_hash', columns: ['email_hash'])]
+#[UniqueEntity(fields: ['emailHash'], message: 'Un compte existe déjà pour cet email.')]
+class User implements UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::STRING, length: 180)]
+    #[ORM\Column(name: 'email_hash', type: Types::STRING, length: 64)]
     #[Assert\NotBlank]
-    #[Assert\Email]
-    private string $email = '';
+    #[Assert\Length(exactly: 64)]
+    private string $emailHash = '';
 
     /** @var list<string> */
     #[ORM\Column(type: Types::JSON)]
     private array $roles = [];
-
-    #[ORM\Column(type: Types::STRING)]
-    private string $password = '';
 
     /** @var Collection<int, PantryItem> */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: PantryItem::class, orphanRemoval: true)]
@@ -51,21 +47,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function getEmail(): string
+    public function getEmailHash(): string
     {
-        return $this->email;
+        return $this->emailHash;
     }
 
-    public function setEmail(string $email): self
+    public function setEmailHash(string $emailHash): self
     {
-        $this->email = $email;
+        $this->emailHash = $emailHash;
 
         return $this;
     }
 
     public function getUserIdentifier(): string
     {
-        return $this->email;
+        return $this->emailHash;
     }
 
     /** @return list<string> */
@@ -81,18 +77,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
-
-        return $this;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
 
         return $this;
     }

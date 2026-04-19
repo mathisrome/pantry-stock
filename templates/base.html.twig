@@ -29,11 +29,10 @@
                 <a class="brand" href="{{ path('app_pantry') }}">Pantry Stock</a>
                 <nav class="app-nav">
                     {% if app.user %}
-                        <span class="user-pill" title="{{ app.user.userIdentifier }}">{{ app.user.userIdentifier }}</span>
+                        <span class="user-pill" title="Identifiant anonyme">#{{ app.user.userIdentifier|slice(0, 8) }}</span>
                         <a href="{{ path('app_logout') }}">Déconnexion</a>
                     {% else %}
                         <a href="{{ path('app_login') }}">Connexion</a>
-                        <a href="{{ path('app_register') }}">Inscription</a>
                     {% endif %}
                 </nav>
             </header>

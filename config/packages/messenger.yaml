@@ -10,7 +10,7 @@ framework:
                     max_retries: 3
                     multiplier: 2
             failed: 'doctrine://default?queue_name=failed'
-            # sync: 'sync://'
+            sync: 'sync://'
 
         default_bus: messenger.bus.default
 
@@ -24,3 +24,17 @@ framework:
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
+
+when@dev:
+    framework:
+        messenger:
+            routing:
+                # In dev we want the magic-link mail to land in Mailpit immediately,
+                # without having to run `bin/console messenger:consume`.
+                Symfony\Component\Mailer\Messenger\SendEmailMessage: sync
+
+when@test:
+    framework:
+        messenger:
+            routing:
+                Symfony\Component\Mailer\Messenger\SendEmailMessage: sync

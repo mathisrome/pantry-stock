@@ -4,25 +4,13 @@
 
 {% block body %}
     <twig:Card class="auth-card">
-        <twig:PageHeader title="Connexion" subtitle="Accédez à votre garde-manger." />
+        <twig:PageHeader title="Connexion" subtitle="Recevez un lien par email pour accéder à votre garde-manger." />
 
-        {% if error %}
-            <twig:Flash type="error" :message="error.messageKey|trans(error.messageData, 'security')" />
-        {% endif %}
-
-        <form method="post">
-            <label for="inputEmail">Email</label>
-            <input type="email" id="inputEmail" name="_username" value="{{ last_username }}" required autofocus autocomplete="email">
-
-            <label for="inputPassword">Mot de passe</label>
-            <input type="password" id="inputPassword" name="_password" required autocomplete="current-password">
-
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
+        {{ form_start(form) }}
+            {{ form_row(form.email) }}
             <div class="form-actions">
-                <twig:Button type="submit" variant="primary" label="Se connecter" />
-                <a href="{{ path('app_register') }}">Créer un compte</a>
+                <twig:Button type="submit" variant="primary" label="Recevoir mon lien" />
             </div>
-        </form>
+        {{ form_end(form) }}
     </twig:Card>
 {% endblock %}

@@ -67,7 +67,7 @@ final class PantryItemVoterTest extends TestCase
     private function makeUser(int $id): User
     {
         $user = new User();
-        $user->setEmail(\sprintf('user-%d@example.test', $id));
+        $user->setEmailHash(str_pad((string) $id, 64, '0', STR_PAD_LEFT));
         $ref = new \ReflectionProperty(User::class, 'id');
         $ref->setValue($user, $id);
 

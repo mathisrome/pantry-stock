@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Votre lien de connexion</title>
+</head>
+<body style="font-family: system-ui, sans-serif; line-height: 1.5;">
+    <p>Bonjour,</p>
+
+    <p>Voici votre lien de connexion à Pantry Stock. Il est valable {{ expires_in_minutes }} minute{{ expires_in_minutes > 1 ? 's' : '' }} et utilisable une seule fois.</p>
+
+    <p>
+        <a href="{{ signed_url }}" style="display: inline-block; padding: 12px 20px; background: #111; color: #fff; text-decoration: none; border-radius: 6px;">
+            Me connecter
+        </a>
+    </p>
+
+    <p>Si vous n’êtes pas à l’origine de cette demande, ignorez simplement ce message.</p>
+</body>
+</html>

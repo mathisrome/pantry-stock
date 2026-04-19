@@ -8,6 +8,7 @@ use App\Entity\PantryItem;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Repository\PantryItemRepository;
+use App\Security\EmailHasher;
 use App\Service\OpenFoodFactsClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -39,7 +40,7 @@ final class PantryListTest extends WebTestCase
         $em->clear();
         /** @var PantryItemRepository $repo */
         $repo = self::getContainer()->get(PantryItemRepository::class);
-        $items = $repo->listForUser($em->getRepository(User::class)->findOneByEmail('add@example.test'));
+        $items = $repo->listForUser($this->findUser($em, 'add@example.test'));
         self::assertCount(1, $items);
         self::assertSame(1, $items[0]->getQuantity());
     }
@@ -67,7 +68,7 @@ final class PantryListTest extends WebTestCase
         $em->clear();
         /** @var PantryItemRepository $repo */
         $repo = self::getContainer()->get(PantryItemRepository::class);
-        $items = $repo->listForUser($em->getRepository(User::class)->findOneByEmail('remove@example.test'));
+        $items = $repo->listForUser($this->findUser($em, 'remove@example.test'));
         self::assertCount(0, $items);
     }
 
@@ -99,11 +100,24 @@ final class PantryListTest extends WebTestCase
 
     private function createUser(EntityManagerInterface $em, string $email): User
     {
+        $hasher = self::getContainer()->get(EmailHasher::class);
+        \assert($hasher instanceof EmailHasher);
+
         $user = new User();
-        $user->setEmail($email);
-        $user->setPassword('hashed');
+        $user->setEmailHash($hasher->hash($email));
         $em->persist($user);
         $em->flush();
+
+        return $user;
+    }
+
+    private function findUser(EntityManagerInterface $em, string $email): User
+    {
+        $hasher = self::getContainer()->get(EmailHasher::class);
+        \assert($hasher instanceof EmailHasher);
+
+        $user = $em->getRepository(User::class)->findOneBy(['emailHash' => $hasher->hash($email)]);
+        \assert($user instanceof User);
 
         return $user;
     }
